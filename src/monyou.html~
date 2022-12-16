@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Monyou</title>
+  <script type="text/javascript" src="monyou.js"></script>
+</head>
+
+<body>
+    <div id="myapp"></div>
+</body>
+
+
+<script type="text/javascript">
+
+// Elmアプリケーションを開始します
+var app = Elm.Monyou.init({
+    node: document.getElementById('myapp')
+});
+
+  var image = document.getElementById('screen');
+  console.log(image);
+  const svgText = new XMLSerializer().serializeToString(image);
+  const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+
+  const a = document.createElement('a');
+  a.href = svgUrl;
+  a.download = "image.svg";
+
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(svgUrl);  
+  
+</script>
+
+</html>

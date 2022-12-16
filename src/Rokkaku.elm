@@ -1,0 +1,115 @@
+module Rokkaku exposing (..)
+
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
+import Svg.Events exposing (..)
+import Types exposing (..)
+import PrimitivesView exposing (..)
+
+
+rhombi : Model -> List (Svg Msg)
+rhombi model  =
+    let
+        n = 16
+    in
+        List.map (\i ->
+                      let
+                          s = i // n - n//2
+                          t = modBy n i
+                      in
+                          rhombus model s t model.unit
+             )
+            (List.range 0 (n*n-1))
+
+rhombus: Model -> Int -> Int -> Int -> Svg Msg
+rhombus model s t unit =
+    let
+        ox = (toFloat unit)*((toFloat s) + (toFloat t)/2) + 2.5*(toFloat model.unit)
+        oy = (toFloat unit)*sqrt(3)/2*(toFloat t)
+        prefix = (String.fromInt s) ++ "-" ++  (String.fromInt t)
+    in
+        Svg.g [transform ("translate(" ++ (String.fromFloat ox) ++ "," ++ (String.fromFloat oy) ++ ")")]
+            [fundD (prefix ++ "a") model
+            ,Svg.g [transform ("translate(" ++ (String.fromInt (unit//2)) ++
+              " " ++ (String.fromFloat (0.5/sqrt(3)*(toFloat model.unit))) ++ ")" ++
+                "rotate(120) translate(" ++ (String.fromInt (-unit//2)) ++
+              " " ++ (String.fromFloat (-0.5/sqrt(3)*(toFloat model.unit))) ++ ")")
+              ]
+                [fundD (prefix ++ "c")model]
+            ,Svg.g [transform ("translate(" ++ (String.fromInt (unit//2)) ++
+              " " ++ (String.fromFloat (0.5/sqrt(3)*(toFloat model.unit))) ++ ")" ++
+                "rotate(240) translate(" ++ (String.fromInt (-unit//2)) ++
+              " " ++ (String.fromFloat (-0.5/sqrt(3)*(toFloat model.unit))) ++ ")")
+              ]
+                [fundD (prefix ++ "e") model]
+            ,Svg.g [transform "rotate(60)"]
+            [fundD (prefix ++ "a") model
+            ,Svg.g [transform ("translate(" ++ (String.fromInt (unit//2)) ++
+              " " ++ (String.fromFloat (0.5/sqrt(3)*(toFloat model.unit))) ++ ")" ++
+                "rotate(120) translate(" ++ (String.fromInt (-unit//2)) ++
+              " " ++ (String.fromFloat (-0.5/sqrt(3)*(toFloat model.unit))) ++ ")")
+              ]
+                [fundD (prefix ++ "c")model]
+            ,Svg.g [transform ("translate(" ++ (String.fromInt (unit//2)) ++
+              " " ++ (String.fromFloat (0.5/sqrt(3)*(toFloat model.unit))) ++ ")" ++
+                "rotate(240) translate(" ++ (String.fromInt (-unit//2)) ++
+              " " ++ (String.fromFloat (-0.5/sqrt(3)*(toFloat model.unit))) ++ ")")
+              ]
+                [fundD (prefix ++ "e") model]]
+            ]
+
+fundPath: Float -> Svg Msg
+fundPath size =
+  Svg.path [d ("M 0 0 l " ++
+               (String.fromFloat size) ++ " " ++
+               (String.fromFloat (size/sqrt(3))) ++ " l " ++
+               (String.fromFloat size)++ " " ++
+               (String.fromFloat (-size/sqrt(3))) ++ " z ")
+           ,stroke "red"
+           ,Svg.Attributes.fill "gray"]
+       []
+           
+fundD: String -> Model ->Svg Msg
+fundD id model =
+    Svg.g []
+        ([Svg.clipPath [Svg.Attributes.id ("cell" ++ id)
+                      ]
+             [fundPath ((toFloat model.unit)*0.5)]
+         ] ++
+        [Svg.clipPath [Svg.Attributes.id ("cell" ++ id)
+                      ]
+             [fundPath ((toFloat model.unit)*0.5)]
+         ] ++ 
+            (List.map (\shape -> shapeView shape id model.unit) model.shapes)
+            ++
+            (case model.newShape of
+                 Just shape ->
+                     [shapeView shape id model.unit]
+                 Nothing ->
+                     []
+            )                
+        {-     ++ (List.map (\circle -> circleView id circle ((toFloat model.unit)*2)) model.circles)
+           ++ (List.map (\oresen -> oresenView id oresen ((toFloat model.unit)*2)) model.oresens)
+           ++ (List.map (\polygon -> polygonView id polygon ((toFloat model.unit)*2)) model.polygons)
+        ++ (case model.newCircle of
+                     Just circle ->
+                         [circleView id circle ((toFloat model.unit)*2)]
+                     Nothing ->
+                         []
+                )
+             ++ (case model.newOresen of
+                     Just oresen ->
+                         [oresenView id oresen ((toFloat model.unit)*2)]
+                     Nothing ->
+                         []
+                )
+            ++ (case model.newPolygon of
+                    Just polygon ->
+                        [polygonView id polygon ((toFloat model.unit)*2)]
+                    Nothing ->
+                        []
+               )
+            -}
+        )
+            
+

@@ -1,0 +1,52 @@
+module PrimitivesView exposing (..)
+
+import Types
+
+circleView: String -> CircleData -> Float -> Svg Msg
+circleView id circle unit =
+    Svg.circle [cx (String.fromFloat (unit*circle.cx))
+               ,cy (String.fromFloat (unit*circle.cy))
+               ,r  (String.fromFloat (unit*circle.r))
+               ,Svg.Attributes.fill circle.fillColor
+               ,stroke circle.stroke
+               ,Svg.Attributes.clipPath ("url(#cell" ++ id ++ ")")
+               ][]
+
+oresenView: String -> OresenData -> Float -> Svg Msg
+oresenView id oresen unit =
+    let
+        pathString = List.foldl (\point str -> (str ++
+                                (if str == "" then
+                                           "M "
+                                 else
+                                   "L ")++
+                                (String.fromFloat (unit*point.x)) ++ " " ++
+                                (String.fromFloat (unit*point.y)) ++ " ")
+                                ) "" oresen.points
+    in
+
+    Svg.path [d pathString
+             ,Svg.Attributes.fill "none"
+             ,stroke oresen.stroke
+             ,Svg.Attributes.clipPath ("url(#cell" ++ id ++ ")")
+             ][]
+
+polygonView: String -> PolygonData -> Float -> Svg Msg
+polygonView id polygon unit =
+    let
+        pathString = List.foldl (\point str -> (str ++
+                                (if str == "" then
+                                           "M "
+                                 else
+                                   "L ")++
+                                (String.fromFloat (unit*point.x)) ++ " " ++
+                                (String.fromFloat (unit*point.y)) ++ " ")
+                                ) "" polygon.points
+    in
+
+    Svg.path [d (pathString ++ " Z ")
+             ,Svg.Attributes.fill polygon.fillColor
+             ,stroke polygon.stroke
+             ,Svg.Attributes.clipPath ("url(#cell" ++ id ++ ")")
+             ][]
+    

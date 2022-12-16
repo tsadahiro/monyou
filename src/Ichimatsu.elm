@@ -1,0 +1,104 @@
+module Ichimatsu exposing (..)
+
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
+import Svg.Events exposing (..)
+import Types exposing (..)
+import PrimitivesView exposing (..)
+
+rhombi : Model -> List (Svg Msg)
+rhombi model =
+    let
+        n=14
+    in
+    List.map (\i ->
+                  let
+                      s = i // n - n//2
+                      t = modBy n i
+                  in
+                      rhombus model s t model.unit
+             )
+        (List.range 0 (n*n-1))
+
+rhombus: Model -> Int -> Int -> Int -> Svg Msg
+rhombus model s t unit =
+      let
+          ox = (toFloat unit)*(toFloat (s+5))
+          oy = (toFloat unit)*(toFloat t)
+          prefix = (String.fromInt s) ++ "-" ++  (String.fromInt t)
+      in
+          Svg.g [transform ("translate(" ++ (String.fromFloat ox) ++ "," ++ (String.fromFloat oy) ++ ")")]
+              [fundD (prefix ++ "a") model
+              ,Svg.g [transform ("matrix(-1,0,0,1," ++  "0,0)")]
+                  [fundD (prefix ++ "b") model]
+              ,Svg.g [transform "rotate(90)"]
+                  [fundD (prefix ++ "a") model]
+              ,Svg.g [transform ("matrix(1,0,0,-1,0,0)")]
+                  [fundD (prefix ++ "b") model]
+              ,Svg.g [transform "rotate(180)"]
+                  [fundD (prefix ++ "a") model]
+              ,Svg.g [transform "rotate(270)"]
+                  [fundD (prefix ++ "a") model]
+              ,Svg.g [transform "matrix(0,1,1,0,0,0)"]
+                  [fundD (prefix ++ "b") model]
+              ,Svg.g [transform "matrix(0,1,1,0,0,0)rotate(180)"]
+                  [fundD (prefix ++ "b") model]
+              ]
+
+
+           
+fundD: String -> Model ->Svg Msg
+fundD id model =
+    Svg.g []
+        ([Svg.clipPath [Svg.Attributes.id ("cell" ++ id)
+                      ]
+             [fundPath ((toFloat model.unit)*0.5)]
+         ] ++
+        [Svg.clipPath [Svg.Attributes.id ("cell" ++ id)
+                      ]
+             [fundPath ((toFloat model.unit)*0.5)]
+         ] ++ 
+            (List.map (\shape -> shapeView shape id model.unit) model.shapes)
+            ++
+            (case model.newShape of
+                 Just shape ->
+                     [shapeView shape id model.unit]
+                 Nothing ->
+                     []
+            )                
+        {-     ++ (List.map (\circle -> circleView id circle ((toFloat model.unit)*2)) model.circles)
+           ++ (List.map (\oresen -> oresenView id oresen ((toFloat model.unit)*2)) model.oresens)
+           ++ (List.map (\polygon -> polygonView id polygon ((toFloat model.unit)*2)) model.polygons)
+        ++ (case model.newCircle of
+                     Just circle ->
+                         [circleView id circle ((toFloat model.unit)*2)]
+                     Nothing ->
+                         []
+                )
+             ++ (case model.newOresen of
+                     Just oresen ->
+                         [oresenView id oresen ((toFloat model.unit)*2)]
+                     Nothing ->
+                         []
+                )
+            ++ (case model.newPolygon of
+                    Just polygon ->
+                        [polygonView id polygon ((toFloat model.unit)*2)]
+                    Nothing ->
+                        []
+               )
+            -}
+        )
+            
+
+fundPath: Float -> Svg Msg
+fundPath size =
+  Svg.path [d ("M 0 0 l " ++
+               (String.fromFloat size) ++ " " ++
+               (String.fromFloat size) ++ " l " ++
+               (String.fromFloat -size) ++ " 0 z"
+              )
+           ,stroke "blue"
+           ,Svg.Attributes.fill "gray"]
+       []
+

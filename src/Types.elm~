@@ -1,0 +1,49 @@
+module Types exposing (..)
+
+import ColorPicker
+--import Color exposing (Color)
+
+type CrystalType = Rokkaku
+                 | Asanoha
+                 | Ichimatsu
+
+type Msg = Down {x:Float, y:Float}
+         | Up {x:Float, y:Float}
+         | Move {x:Float, y:Float}
+         | Click {x:Float, y:Float}
+         | DoubleClick
+         | Crystal CrystalType
+         | ColorPicked ColorPicker.Msg
+         | LineColorPicked ColorPicker.Msg
+           
+type alias Point = {x:Float
+                   ,y:Float
+                   }
+
+type alias CircleData = {cx:Float
+                        ,cy:Float
+                        ,r:Float
+                        ,fillColor:String
+                        ,stroke:String
+                        }
+
+
+type alias OresenData = {points:List Point
+                        ,stroke:String
+                        }
+
+type alias PolygonData = {points:List Point
+                         ,stroke:String
+                         ,fillColor:String
+                         }
+
+type Primitive = Oresen OresenData
+               | Polygon PolygonData
+               | Circle CircleData
+
+
+type alias Model = { shapes: List Primitive
+                   , unit: Int
+                   , monyou: CrystalType
+                   }
+                 
