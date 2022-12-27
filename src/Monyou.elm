@@ -244,10 +244,20 @@ tools model =
             ,Border.width 2
             ]
               (row [spacing 10]
+                   [text "save "
+                   ,html (Html.div [Html.Attributes.id "buttonArea"][])
+                   ]
+              )
+         ,el[padding 10
+            ,Background.color color.white
+            ,Border.color color.blue
+            ,Border.width 2
+            ]
+              (row [spacing 10]
                    [text "紋様群"
-                   ,button "六角" (Crystal Rokkaku)
-                   ,button "麻の葉" (Crystal Asanoha)
-                   ,button "市松" (Crystal Ichimatsu)
+                   ,button "p6" (Crystal Rokkaku)
+                   ,button "p6mm" (Crystal Asanoha)
+                   ,button "p4mm" (Crystal Ichimatsu)
                    ]
               )
          ,el[padding 10

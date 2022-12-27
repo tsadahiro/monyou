@@ -13177,6 +13177,7 @@ var $mdgriffith$elm_ui$Element$column = F2(
 						attrs))),
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -13727,18 +13728,45 @@ var $author$project$Monyou$tools = function (model) {
 						]),
 					_List_fromArray(
 						[
+							$mdgriffith$elm_ui$Element$text('save '),
+							$mdgriffith$elm_ui$Element$html(
+							A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$id('buttonArea')
+									]),
+								_List_Nil))
+						]))),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$padding(10),
+						$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
+						$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue),
+						$mdgriffith$elm_ui$Element$Border$width(2)
+					]),
+				A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing(10)
+						]),
+					_List_fromArray(
+						[
 							$mdgriffith$elm_ui$Element$text('紋様群'),
 							A2(
 							$author$project$Monyou$button,
-							'六角',
+							'p6',
 							$author$project$Types$Crystal($author$project$Types$Rokkaku)),
 							A2(
 							$author$project$Monyou$button,
-							'麻の葉',
+							'p6mm',
 							$author$project$Types$Crystal($author$project$Types$Asanoha)),
 							A2(
 							$author$project$Monyou$button,
-							'市松',
+							'p4mm',
 							$author$project$Types$Crystal($author$project$Types$Ichimatsu))
 						]))),
 				A2(
