@@ -207,7 +207,10 @@ update  msg model =
                     , lineColor = col |> Maybe.withDefault model.lineColor
                 }
         DeleteAll -> {model | shapes = []}
-        DeleteOne -> {model | shapes = List.take ((List.length model.shapes)-1) model.shapes}
+        DeleteShape idx -> {model | shapes = (List.take (idx) model.shapes) ++ (List.drop (idx+1) model.shapes)}
+        MoveUp idx -> {model | shapes = (List.take (idx-1) model.shapes) ++
+                       (List.reverse <| List.drop (idx-1) <| List.take (idx+1) model.shapes) ++
+                       (List.drop (idx+1) model.shapes)}
 
 screen : Model -> Element Msg
 screen model = html <| screenSvg model
@@ -270,37 +273,86 @@ tools model =
                    ,button "折れ線" (ModeSelected LineMode)
                    ,button "多角形" (ModeSelected PolygonMode)
                    ,button "円" (ModeSelected CircleMode)
-                   ,button "消しゴム" (DeleteOne)
-                   ,button "全消去" (DeleteAll)
                    ]
               )
-         ,el[padding 10
-            ,Background.color color.white
-            ,Border.width 2
-            ,Border.color color.blue
-            ]
-              (column [spacing 10]
-                   [text "塗り色"
-                   ,html (ColorPicker.view model.fillColor ColorPicker.empty
-                         |> Html.map FillColorPicked 
-                         )
+         ,row[spacing 10][
+               column[][
+                    el[padding 10
+                      ,Background.color color.white
+                      ,Border.width 2
+                      ,Border.color color.blue
+                      ]
+                        (column [spacing 10]
+                             [text "塗り色"
+                             ,html (ColorPicker.view model.fillColor ColorPicker.empty
+                                   |> Html.map FillColorPicked 
+                                   )
+                             ]
+                        )
+                   ,el[padding 10
+                      ,Background.color color.white
+                      ,Border.width 2
+                      ,Border.color color.blue
+                      ]
+                        (column [spacing 10]
+                             [text "線の色"
+                             ,html (ColorPicker.view model.lineColor ColorPicker.empty
+                                   |> Html.map LineColorPicked 
+                                   )
+                             ]
+                        )
                    ]
-              )
-         ,el[padding 10
-            ,Background.color color.white
-            ,Border.width 2
-            ,Border.color color.blue
-            ]
-              (column [spacing 10]
-                   [text "線の色"
-                   ,html (ColorPicker.view model.lineColor ColorPicker.empty
-                         |> Html.map LineColorPicked 
-                         )
-                   ]
-              )
+              ,column [padding 10
+                      ,spacing 10
+                      ,Background.color color.white
+                      ,Border.width 2
+                      ,Border.color color.blue
+                      ]
+                   ([button "全消去" (DeleteAll)]++(List.indexedMap shapeIconView (model.shapes)))
+              ]
          ]
     )
-         
+
+shapeIconView : Int -> Primitive -> Element Msg
+shapeIconView idx shape =
+    row [Border.color color.blue
+        ,spacing 10
+        ]
+        [case shape of 
+             Circle d ->
+                 el [Border.color color.blue]
+                     <| html (svg [SAt.width "20"
+                                ,SAt.height "20"][
+                                   Svg.circle [SAt.cx "10"
+                                              ,SAt.cy "10"
+                                              ,SAt.r "10"
+                                              ,SAt.fill d.fillColor
+                                              ,SAt.stroke d.stroke
+                                              ][]
+                                  ])
+             Oresen d ->
+                 el [Border.color color.blue]
+                     <| html (svg [SAt.width "20"
+                                  ,SAt.height "20"]
+                                  [
+                                   Svg.path [SAt.d "M 5 5 l 10 5 l -5 5 l 10 5"
+                                            ,SAt.stroke d.stroke
+                                            ,SAt.fill "none"
+                                            ][]
+                                  ])
+             Polygon d -> 
+                 el [Border.color color.blue]
+                     <| html (svg [SAt.width "20"
+                                ,SAt.height "20"]
+                                  [
+                                   Svg.path [SAt.d "M 5 5 l 10 5 l -15 10 l 10 5 z"
+                                            ,SAt.stroke d.stroke
+                                            ,SAt.fill d.fillColor
+                                            ][]
+                                  ])
+        ,button "🗑" (DeleteShape idx)
+        ,button "⬆" (MoveUp idx)
+        ]
 view : Model -> Html Msg
 view model =
     layout[]

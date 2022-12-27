@@ -5255,6 +5255,27 @@ var $author$project$Types$PolygonData = F3(
 	function (points, stroke, fillColor) {
 		return {fillColor: fillColor, points: points, stroke: stroke};
 	});
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Basics$pow = _Basics_pow;
 var $elm$core$Basics$sqrt = _Basics_sqrt;
@@ -5939,14 +5960,29 @@ var $author$project$Monyou$update = F2(
 				return _Utils_update(
 					model,
 					{shapes: _List_Nil});
-			default:
+			case 'DeleteShape':
+				var idx = msg.a;
 				return _Utils_update(
 					model,
 					{
-						shapes: A2(
-							$elm$core$List$take,
-							$elm$core$List$length(model.shapes) - 1,
-							model.shapes)
+						shapes: _Utils_ap(
+							A2($elm$core$List$take, idx, model.shapes),
+							A2($elm$core$List$drop, idx + 1, model.shapes))
+					});
+			default:
+				var idx = msg.a;
+				return _Utils_update(
+					model,
+					{
+						shapes: _Utils_ap(
+							A2($elm$core$List$take, idx - 1, model.shapes),
+							_Utils_ap(
+								$elm$core$List$reverse(
+									A2(
+										$elm$core$List$drop,
+										idx - 1,
+										A2($elm$core$List$take, idx + 1, model.shapes))),
+								A2($elm$core$List$drop, idx + 1, model.shapes)))
 					});
 		}
 	});
@@ -12890,7 +12926,6 @@ var $author$project$Types$Crystal = function (a) {
 	return {$: 'Crystal', a: a};
 };
 var $author$project$Types$DeleteAll = {$: 'DeleteAll'};
-var $author$project$Types$DeleteOne = {$: 'DeleteOne'};
 var $author$project$Types$FillColorPicked = function (a) {
 	return {$: 'FillColorPicked', a: a};
 };
@@ -13180,6 +13215,123 @@ var $mdgriffith$elm_ui$Element$column = F2(
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
+var $author$project$Types$DeleteShape = function (a) {
+	return {$: 'DeleteShape', a: a};
+};
+var $author$project$Types$MoveUp = function (a) {
+	return {$: 'MoveUp', a: a};
+};
+var $author$project$Monyou$shapeIconView = F2(
+	function (idx, shape) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue),
+					$mdgriffith$elm_ui$Element$spacing(10)
+				]),
+			_List_fromArray(
+				[
+					function () {
+					switch (shape.$) {
+						case 'Circle':
+							var d = shape.a;
+							return A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+									]),
+								$mdgriffith$elm_ui$Element$html(
+									A2(
+										$elm$svg$Svg$svg,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$width('20'),
+												$elm$svg$Svg$Attributes$height('20')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$svg$Svg$circle,
+												_List_fromArray(
+													[
+														$elm$svg$Svg$Attributes$cx('10'),
+														$elm$svg$Svg$Attributes$cy('10'),
+														$elm$svg$Svg$Attributes$r('10'),
+														$elm$svg$Svg$Attributes$fill(d.fillColor),
+														$elm$svg$Svg$Attributes$stroke(d.stroke)
+													]),
+												_List_Nil)
+											]))));
+						case 'Oresen':
+							var d = shape.a;
+							return A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+									]),
+								$mdgriffith$elm_ui$Element$html(
+									A2(
+										$elm$svg$Svg$svg,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$width('20'),
+												$elm$svg$Svg$Attributes$height('20')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$svg$Svg$path,
+												_List_fromArray(
+													[
+														$elm$svg$Svg$Attributes$d('M 5 5 l 10 5 l -5 5 l 10 5'),
+														$elm$svg$Svg$Attributes$stroke(d.stroke),
+														$elm$svg$Svg$Attributes$fill('none')
+													]),
+												_List_Nil)
+											]))));
+						default:
+							var d = shape.a;
+							return A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+									]),
+								$mdgriffith$elm_ui$Element$html(
+									A2(
+										$elm$svg$Svg$svg,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$width('20'),
+												$elm$svg$Svg$Attributes$height('20')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												$elm$svg$Svg$path,
+												_List_fromArray(
+													[
+														$elm$svg$Svg$Attributes$d('M 5 5 l 10 5 l -15 10 l 10 5 z'),
+														$elm$svg$Svg$Attributes$stroke(d.stroke),
+														$elm$svg$Svg$Attributes$fill(d.fillColor)
+													]),
+												_List_Nil)
+											]))));
+					}
+				}(),
+					A2(
+					$author$project$Monyou$button,
+					'🗑',
+					$author$project$Types$DeleteShape(idx)),
+					A2(
+					$author$project$Monyou$button,
+					'⬆',
+					$author$project$Types$MoveUp(idx))
+				]));
+	});
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $simonh1000$elm_colorpicker$ColorPicker$markerAttrs = _List_fromArray(
@@ -13798,58 +13950,87 @@ var $author$project$Monyou$tools = function (model) {
 							A2(
 							$author$project$Monyou$button,
 							'円',
-							$author$project$Types$ModeSelected($author$project$Types$CircleMode)),
-							A2($author$project$Monyou$button, '消しゴム', $author$project$Types$DeleteOne),
-							A2($author$project$Monyou$button, '全消去', $author$project$Types$DeleteAll)
+							$author$project$Types$ModeSelected($author$project$Types$CircleMode))
 						]))),
 				A2(
-				$mdgriffith$elm_ui$Element$el,
+				$mdgriffith$elm_ui$Element$row,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$padding(10),
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
-						$mdgriffith$elm_ui$Element$Border$width(2),
-						$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+						$mdgriffith$elm_ui$Element$spacing(10)
 					]),
-				A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$spacing(10)
-						]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text('塗り色'),
-							$mdgriffith$elm_ui$Element$html(
-							A2(
-								$elm$html$Html$map,
-								$author$project$Types$FillColorPicked,
-								A2($simonh1000$elm_colorpicker$ColorPicker$view, model.fillColor, $simonh1000$elm_colorpicker$ColorPicker$empty)))
-						]))),
-				A2(
-				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$padding(10),
-						$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
-						$mdgriffith$elm_ui$Element$Border$width(2),
-						$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
-					]),
-				A2(
-					$mdgriffith$elm_ui$Element$column,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$spacing(10)
-						]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text('線の色'),
-							$mdgriffith$elm_ui$Element$html(
-							A2(
-								$elm$html$Html$map,
-								$author$project$Types$LineColorPicked,
-								A2($simonh1000$elm_colorpicker$ColorPicker$view, model.lineColor, $simonh1000$elm_colorpicker$ColorPicker$empty)))
-						])))
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$padding(10),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
+										$mdgriffith$elm_ui$Element$Border$width(2),
+										$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+									]),
+								A2(
+									$mdgriffith$elm_ui$Element$column,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$spacing(10)
+										]),
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$text('塗り色'),
+											$mdgriffith$elm_ui$Element$html(
+											A2(
+												$elm$html$Html$map,
+												$author$project$Types$FillColorPicked,
+												A2($simonh1000$elm_colorpicker$ColorPicker$view, model.fillColor, $simonh1000$elm_colorpicker$ColorPicker$empty)))
+										]))),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$padding(10),
+										$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
+										$mdgriffith$elm_ui$Element$Border$width(2),
+										$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+									]),
+								A2(
+									$mdgriffith$elm_ui$Element$column,
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$spacing(10)
+										]),
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$text('線の色'),
+											$mdgriffith$elm_ui$Element$html(
+											A2(
+												$elm$html$Html$map,
+												$author$project$Types$LineColorPicked,
+												A2($simonh1000$elm_colorpicker$ColorPicker$view, model.lineColor, $simonh1000$elm_colorpicker$ColorPicker$empty)))
+										])))
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$column,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$padding(10),
+								$mdgriffith$elm_ui$Element$spacing(10),
+								$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.white),
+								$mdgriffith$elm_ui$Element$Border$width(2),
+								$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue)
+							]),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									A2($author$project$Monyou$button, '全消去', $author$project$Types$DeleteAll)
+								]),
+							A2($elm$core$List$indexedMap, $author$project$Monyou$shapeIconView, model.shapes)))
+					]))
 			]));
 };
 var $author$project$Monyou$view = function (model) {

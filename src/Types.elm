@@ -16,8 +16,9 @@ type Msg = Down {x:Float, y:Float}
          | FillColorPicked ColorPicker.Msg
          | LineColorPicked ColorPicker.Msg
          | ModeSelected EditMode
-         | DeleteOne
          | DeleteAll
+         | DeleteShape Int
+         | MoveUp Int
            
 type alias Point = {x:Float
                    ,y:Float
