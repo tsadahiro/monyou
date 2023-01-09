@@ -13166,17 +13166,18 @@ var $mdgriffith$elm_ui$Element$Border$width = function (v) {
 			v,
 			v));
 };
-var $author$project$Monyou$button = F2(
-	function (label, msg) {
+var $author$project$Monyou$button = F3(
+	function (label, msg, selected) {
 		return A2(
 			$mdgriffith$elm_ui$Element$Input$button,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$padding(5),
-					$mdgriffith$elm_ui$Element$Background$color($author$project$Monyou$color.lightBlue),
+					$mdgriffith$elm_ui$Element$Background$color(
+					selected ? $author$project$Monyou$color.blue : $author$project$Monyou$color.lightBlue),
 					$mdgriffith$elm_ui$Element$Border$width(2),
 					$mdgriffith$elm_ui$Element$Border$rounded(6),
-					$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.blue),
+					$mdgriffith$elm_ui$Element$Border$color($author$project$Monyou$color.lightBlue),
 					$mdgriffith$elm_ui$Element$Border$shadow(
 					{
 						blur: 10,
@@ -13184,7 +13185,8 @@ var $author$project$Monyou$button = F2(
 						offset: _Utils_Tuple2(4, 4),
 						size: 3
 					}),
-					$mdgriffith$elm_ui$Element$Font$color($author$project$Monyou$color.blue),
+					$mdgriffith$elm_ui$Element$Font$color(
+					selected ? $author$project$Monyou$color.lightBlue : $author$project$Monyou$color.blue),
 					$mdgriffith$elm_ui$Element$Events$onClick(msg)
 				]),
 			{
@@ -13322,14 +13324,16 @@ var $author$project$Monyou$shapeIconView = F2(
 											]))));
 					}
 				}(),
-					A2(
+					A3(
 					$author$project$Monyou$button,
 					'🗑',
-					$author$project$Types$DeleteShape(idx)),
-					A2(
+					$author$project$Types$DeleteShape(idx),
+					false),
+					A3(
 					$author$project$Monyou$button,
 					'⬆',
-					$author$project$Types$MoveUp(idx))
+					$author$project$Types$MoveUp(idx),
+					false)
 				]));
 	});
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -13908,18 +13912,21 @@ var $author$project$Monyou$tools = function (model) {
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text('紋様群'),
-							A2(
+							A3(
 							$author$project$Monyou$button,
 							'p6',
-							$author$project$Types$Crystal($author$project$Types$Rokkaku)),
-							A2(
+							$author$project$Types$Crystal($author$project$Types$Rokkaku),
+							_Utils_eq(model.monyou, $author$project$Types$Rokkaku)),
+							A3(
 							$author$project$Monyou$button,
 							'p6mm',
-							$author$project$Types$Crystal($author$project$Types$Asanoha)),
-							A2(
+							$author$project$Types$Crystal($author$project$Types$Asanoha),
+							_Utils_eq(model.monyou, $author$project$Types$Asanoha)),
+							A3(
 							$author$project$Monyou$button,
 							'p4mm',
-							$author$project$Types$Crystal($author$project$Types$Ichimatsu))
+							$author$project$Types$Crystal($author$project$Types$Ichimatsu),
+							_Utils_eq(model.monyou, $author$project$Types$Ichimatsu))
 						]))),
 				A2(
 				$mdgriffith$elm_ui$Element$el,
@@ -13939,18 +13946,21 @@ var $author$project$Monyou$tools = function (model) {
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text('モード'),
-							A2(
+							A3(
 							$author$project$Monyou$button,
 							'折れ線',
-							$author$project$Types$ModeSelected($author$project$Types$LineMode)),
-							A2(
+							$author$project$Types$ModeSelected($author$project$Types$LineMode),
+							_Utils_eq(model.editMode, $author$project$Types$LineMode)),
+							A3(
 							$author$project$Monyou$button,
 							'多角形',
-							$author$project$Types$ModeSelected($author$project$Types$PolygonMode)),
-							A2(
+							$author$project$Types$ModeSelected($author$project$Types$PolygonMode),
+							_Utils_eq(model.editMode, $author$project$Types$PolygonMode)),
+							A3(
 							$author$project$Monyou$button,
 							'円',
-							$author$project$Types$ModeSelected($author$project$Types$CircleMode))
+							$author$project$Types$ModeSelected($author$project$Types$CircleMode),
+							_Utils_eq(model.editMode, $author$project$Types$CircleMode))
 						]))),
 				A2(
 				$mdgriffith$elm_ui$Element$row,
@@ -14027,7 +14037,7 @@ var $author$project$Monyou$tools = function (model) {
 						_Utils_ap(
 							_List_fromArray(
 								[
-									A2($author$project$Monyou$button, '全消去', $author$project$Types$DeleteAll)
+									A3($author$project$Monyou$button, '全消去', $author$project$Types$DeleteAll, false)
 								]),
 							A2($elm$core$List$indexedMap, $author$project$Monyou$shapeIconView, model.shapes)))
 					]))

@@ -258,9 +258,9 @@ tools model =
             ]
               (row [spacing 10]
                    [text "紋様群"
-                   ,button "p6" (Crystal Rokkaku)
-                   ,button "p6mm" (Crystal Asanoha)
-                   ,button "p4mm" (Crystal Ichimatsu)
+                   ,button "p6" (Crystal Rokkaku) (model.monyou == Rokkaku)
+                   ,button "p6mm" (Crystal Asanoha) (model.monyou == Asanoha)
+                   ,button "p4mm" (Crystal Ichimatsu) (model.monyou == Ichimatsu)
                    ]
               )
          ,el[padding 10
@@ -270,9 +270,9 @@ tools model =
             ]
               (row [spacing 10]
                    [text "モード"
-                   ,button "折れ線" (ModeSelected LineMode)
-                   ,button "多角形" (ModeSelected PolygonMode)
-                   ,button "円" (ModeSelected CircleMode)
+                   ,button "折れ線" (ModeSelected LineMode) (model.editMode == LineMode)
+                   ,button "多角形" (ModeSelected PolygonMode) (model.editMode == PolygonMode)
+                   ,button "円" (ModeSelected CircleMode) (model.editMode == CircleMode)
                    ]
               )
          ,row[spacing 10][
@@ -308,7 +308,7 @@ tools model =
                       ,Border.width 2
                       ,Border.color color.blue
                       ]
-                   ([button "全消去" (DeleteAll)]++(List.indexedMap shapeIconView (model.shapes)))
+                   ([button "全消去" (DeleteAll) False]++(List.indexedMap shapeIconView (model.shapes)))
               ]
          ]
     )
@@ -350,8 +350,8 @@ shapeIconView idx shape =
                                             ,SAt.fill d.fillColor
                                             ][]
                                   ])
-        ,button "🗑" (DeleteShape idx)
-        ,button "⬆" (MoveUp idx)
+        ,button "🗑" (DeleteShape idx) False
+        ,button "⬆" (MoveUp idx) False
         ]
 view : Model -> Html Msg
 view model =
@@ -368,20 +368,28 @@ view model =
              ]
         )
 
-button : String -> Msg -> Element Msg
-button label msg = Input.button [padding 5
-                            , Background.color color.lightBlue
-                            , Border.width 2
-                            , Border.rounded 6
-                            , Border.color color.blue
-                            , Border.shadow
-                                     { offset = ( 4, 4 ), size = 3, blur = 10, color = color.lightGrey }
-                            , Font.color color.blue
-                            , Ev.onClick  msg
-                            ]
-               {label = text label
-               ,onPress = Nothing
-               }
+button : String -> Msg -> Bool -> Element Msg
+button label msg selected = Input.button [padding 5
+                                         , Background.color (if selected then
+                                                                 color.blue
+                                                             else
+                                                                 color.lightBlue
+                                                            )
+                                         , Border.width 2
+                                         , Border.rounded 6
+                                         , Border.color color.lightBlue                                                        
+                                         , Border.shadow
+                                              { offset = ( 4, 4 ), size = 3, blur = 10, color = color.lightGrey }
+                                         , Font.color (if selected then
+                                                           color.lightBlue
+                                                       else
+                                                             color.blue
+                                                      )
+                                         , Ev.onClick  msg
+                                         ]
+                            {label = text label
+                            ,onPress = Nothing
+                            }
             
 color =
     { blue = rgb255 0x72 0x9F 0xCF
