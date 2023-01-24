@@ -19,13 +19,11 @@ import ColorPicker
 import Color exposing (Color)
 import Html.Events.Extra.Pointer exposing (..)
 import Html.Events.Extra.Mouse as Mouse
---import Svg.String
---import Svg.String.Attributes
---import Svg.String.Events
 
 import Asanoha
 import Ichimatsu
 import Rokkaku
+import P3
 import Editor
 import Types exposing (..)
 
@@ -45,7 +43,7 @@ init = {unit = 70
        ,monyou = Asanoha
        ,fillColorPicker = ColorPicker.empty
        ,lineColorPicker = ColorPicker.empty
-       ,editorMargin = 10
+       ,editorMargin = 65
        }
 
 update : Msg -> Model -> Model
@@ -229,6 +227,7 @@ screenSvg model = (svg [ SAt.width "700"
                              Asanoha -> Asanoha.rhombi model
                              Ichimatsu -> Ichimatsu.rhombi model
                              Rokkaku -> Rokkaku.rhombi model
+                             P3 -> P3.rhombi model
                         )
                    )
               )
@@ -261,6 +260,7 @@ tools model =
                    ,button "p6" (Crystal Rokkaku) (model.monyou == Rokkaku)
                    ,button "p6mm" (Crystal Asanoha) (model.monyou == Asanoha)
                    ,button "p4mm" (Crystal Ichimatsu) (model.monyou == Ichimatsu)
+                   ,button "p3" (Crystal P3) (model.monyou == P3)
                    ]
               )
          ,el[padding 10

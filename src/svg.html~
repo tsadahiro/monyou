@@ -1,0 +1,13 @@
+<html>
+  <head>
+  </head>
+
+  <body>
+    <svg width = "1000" height = "1000">
+      <g transform = "translate(500,500)">
+	<path d = "M 0 0 l 200 0 l -100 50 z" fill="blue">
+	</path>
+      </g>
+    </svg>
+  </body>
+</html>

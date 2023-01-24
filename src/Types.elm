@@ -6,6 +6,7 @@ import Color exposing (Color)
 type CrystalType = Rokkaku
                  | Asanoha
                  | Ichimatsu
+                 | P3
 
 type Msg = Down {x:Float, y:Float}
          | Up {x:Float, y:Float}
